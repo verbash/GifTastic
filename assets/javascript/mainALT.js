@@ -8,25 +8,22 @@
 
 // main array for buttons
     var topics = ["frozen movie","octonauts","ukulele","cartoon ghosts","pizza","disney princesses"];
-    // var results;
+    var results;
 
        //FUNCTIONS//-------------------------------------
 
 // function for making buttons
     function buttonLoop() {
-        $("#button-div").html("");
+        $("#button-div").empty();
         for (var j=0; j < topics.length; j++) {
-            
             var div = $("<button>").html(topics[j])
-            .attr("data-favorite", topics[j])
-            .attr("class","button");
-            $("#button-div").append(div); }
-            return;
+            .attr("data-favorite", topics[j]);
+            $("#button-div").append(div); 
             };
-      
+        };
 // function to create divs, <img> & add animation attributes
 function createGifs() {
-       console.log("createGif results" + results)
+       
     for (var i = 0; i < results.length; i++) {
       var favoriteDiv = $("<div>");
       var p = $("<p>");
@@ -42,45 +39,22 @@ function createGifs() {
       $('#gifs-appear-here').prepend(favoriteDiv);
         };
   };
-        // MAIN Automation & CLICK EVENTS ------------------------
-        
-// Initial make buttons
-    buttonLoop();
-
-// click handler for form submit
-$("#find-gif").on("click",function(event) {
-    event.preventDefault();
-    var newFav = $("#newFavorite").val().trim();
-    console.log(newFav);
-    topics.push(newFav);
-    buttonLoop();
-    return;
-      });
-
-// click event to get GIFs from GIPHY API
-  $("#button-div").on("click","button", function() {
+// function for grabbing Gifs from API    
+function gifGrabber() {
     var favorite = $(this).attr("data-favorite");
-    console.log(favorite);
+    console.log(this);
     var queryURL = ("https://api.giphy.com/v1/gifs/search?api_key=OrEQ97QKAY3T5NEkUZmSITbmXrA19XHq&q=" 
                     + favorite  + "&limit=10&offset=0&rating=G&lang=en");
     $.ajax({
         url: queryURL,
         method: "GET"
         }).then(function(response) {
-            console.log(response.data);
             results = response.data
             console.log (results +"results")
-            createGifs();
+            return results;
             });
-    });
-
-
-
-
-// click event handler for gifs
-
-
-$("#gifs-appear-here").on('click', '.gif', 
+    };
+// function for animating Gifs
 function gifAnimator() {
     console.log ("gifffffer")
     var state = $(this).attr("data-state");
@@ -92,7 +66,34 @@ function gifAnimator() {
         $(this).attr("src", $(this).attr("data-still"));
         $(this).attr("data-state", "still");
     }
-});
+};
+        // MAIN Automation & CLICK EVENTS ------------------------
+        
+// Initial make buttons
+    buttonLoop();
+
+// click event to get GIFs from GIPHY API
+  $("button").on("click", function() {
+
+        cal;
+        createGifs();
+
+  });
+
+// click handler for form submit
+ $("form").submit(function(Event) {
+    Event.preventDefault();
+    var newFav = $("#newFavorite").val().trim();
+    console.log(newFav);
+    topics.push(newFav);
+    buttonLoop();
+      });
+
+// click event handler for gifs
+$(".gif").on("click", gifAnimator());
+
+
+    
 
     
 
